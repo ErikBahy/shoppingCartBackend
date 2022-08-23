@@ -1,0 +1,28 @@
+{
+  "name": "rest-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "node",
+    "restful",
+    "api"
+  ],
+  "author": "erik",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.1",
+    "mongoose": "^6.4.5",
+    "morgan": "^1.10.0",
+    "serverless": "^3.21.0",
+    "serverless-http": "^3.0.1"
+  },
+  "devDependencies": {
+    "serverless-offline": "^9.2.6"
+  }
+}

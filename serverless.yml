@@ -1,0 +1,103 @@
+service: rest-api
+
+provider:
+  name: aws
+  runtime: nodejs12.x # set node.js runtime
+  memorySize: 128 # set the maximum memory of the Lambdas in Megabytes
+  timeout: 10 # the timeout is 10 seconds (default is 6 seconds)
+  stage: dev # setting the env stage to dev, this will be visible in the routes
+  region: eu-central-1
+
+functions: # add 4 functions for CRUD
+  create:
+    handler: product/handler/postAProduct.postAProduct  # point to exported create function in handler.js
+    events:
+      - http:
+          path: products # path will be domain.name.com/dev/notes
+          method: post
+          cors: true
+  getOne:
+    handler: product/handler/getOneProduct.getOneProduct
+    events:
+      - http:
+          path: products/{id} # path will be domain.name.com/dev/notes/1
+          method: get
+          cors: true
+  getAll:
+    handler: product/handler/getAllProducts.getAll # path will be domain.name.com/dev/notes
+    events:
+     - http:
+         path: products
+         method: get
+         cors: true
+  update:
+    handler: product/handler/patchAProduct.patchAProduct # path will be domain.name.com/dev/notes/1
+    events:
+     - http:
+         path: products/{id}
+         method: patch
+         cors: true
+  delete:
+    handler: product/handler/deleteAProduct.deleteAProduct
+    events:
+     - http:
+         path: products/{id} # path will be domain.name.com/dev/notes/1
+         method: delete
+         cors: true
+  getAllShoppingCarts:
+    handler: shoppingCart/handler/getAllShoppingCarts.getAllShoppingCarts # path will be domain.name.com/dev/notes
+    events:
+     - http:
+         path: shoppingCart
+         method: get
+         cors: true         
+  getAllUserShoppingCarts:
+    handler: shoppingCart/handler/getAllUserShoppingCarts.getAllUserShoppingCarts # path will be domain.name.com/dev/notes
+    events:
+     - http:
+         path: shoppingCart/{id}
+         method: get
+         cors: true         
+  deleteUsersShoppingCart:
+    handler: shoppingCart/handler/deleteUsersShoppingCart.deleteUsersShoppingCart # path will be domain.name.com/dev/notes
+    events:
+     - http:
+         path: shoppingCart/user/{id}
+         method: delete
+         cors: true         
+  deleteAShoppingCartItem:
+    handler: shoppingCart/handler/deleteUsersShoppingCartIten.deleteAShoppingCartItem # path will be domain.name.com/dev/notes
+    events:
+     - http:
+         path: shoppingCart/{id}
+         method: delete
+         cors: true    
+  postAShoppingCart-increment:
+    handler: shoppingCart/handler/postAShoppingCart-increment.postAShoppingCartIncrement  # point to exported create function in handler.js
+    events:
+      - http:
+          path: shoppingCart/{id} # path will be domain.name.com/dev/notes
+          method: post
+          cors: true            
+  postAShoppingCart-decrement:
+    handler: shoppingCart/handler/postAShoppingCart-decrement.postAShoppingCartDecrement  # point to exported create function in handler.js
+    events:
+      - http:
+          path: shoppingCart/decrement/{id} # path will be domain.name.com/dev/notes
+          method: post
+          cors: true            
+resources:
+  Resources:
+    GatewayResponseDefault4XX:
+      Type: 'AWS::ApiGateway::GatewayResponse'
+      Properties:
+        ResponseParameters:
+          gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+          gatewayresponse.header.Access-Control-Allow-Headers: "'*'"
+        ResponseType: DEFAULT_4XX
+        RestApiId:
+          Ref: 'ApiGatewayRestApi'
+
+plugins:
+- serverless-offline # adding the plugin to be able to run the offline emulation
+
